@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>កាហ្វេខ្មែរ — គម្រោង Assignment JavaScript</title>
+<link href="https://fonts.googleapis.com/css2?family=Moul&family=Battambang:wght@300;400;700&family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ភាគ CSS — ប្រព័ន្ធពណ៌ (CSS Variables) សម្រាប់ Light / Dark Mode
+   ============================================================ */
+:root{
+  --bg:#F2F7F4;
+  --surface:#FFFFFF;
+  --ink:#12281E;
+  --muted:#5B7268;
+  --brand:#0F3D2E;        /* បៃតងចាស់ */
+  --brand-2:#1B5E43;
+  --gold:#C9A227;         /* មាស */
+  --gold-soft:#F3E7C3;
+  --danger:#B3402E;
+  --line:#DCE8E1;
+  --shadow:0 10px 30px rgba(15,61,46,.10);
+  --radius:14px;
+}
+body.dark{
+  --bg:#0C1712;
+  --surface:#132520;
+  --ink:#EAF3EE;
+  --muted:#9DB4A9;
+  --brand:#1E6B4C;
+  --brand-2:#2E8B63;
+  --gold:#E3BE4A;
+  --gold-soft:#3A3218;
+  --danger:#E06A55;
+  --line:#22392F;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Battambang','Khmer OS Siemreap','Noto Sans Khmer',sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.85;
+  transition:background .35s,color .35s;
+}
+h1,h2,h3{font-family:'Moul','Khmer OS Muol Light','Battambang',serif;font-weight:400;line-height:1.6}
+
+/* ---------- Header / Navigation ---------- */
+header{
+  position:sticky;top:0;z-index:50;
+  background:var(--brand);color:#fff;
+  box-shadow:var(--shadow);
+}
+.nav{
+  max-width:1080px;margin:0 auto;padding:.7rem 1.2rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.logo{font-family:'Moul','Khmer OS Muol Light',serif;font-size:1.15rem;color:var(--gold);display:flex;align-items:center;gap:.5rem}
+.logo .cup{font-size:1.4rem}
+.nav-links{display:flex;gap:.25rem;margin-left:auto;flex-wrap:wrap}
+.nav-links a{
+  color:#EAF3EE;text-decoration:none;padding:.35rem .8rem;border-radius:999px;
+  font-size:.92rem;transition:.25s;
+}
+.nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,.16);color:var(--gold)}
+#themeBtn{
+  border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;
+  border-radius:999px;padding:.35rem .9rem;cursor:pointer;font-family:inherit;font-size:.9rem;
+  transition:.25s;
+}
+#themeBtn:hover{background:var(--gold);color:var(--brand);border-color:var(--gold)}
+#cartCount{
+  background:var(--gold);color:var(--brand);border-radius:999px;
+  padding:0 .5rem;font-weight:700;font-size:.85rem;margin-left:.3rem;
+}
+
+/* ---------- Hero ---------- */
+.hero{
+  background:linear-gradient(135deg,var(--brand) 0%,var(--brand-2) 100%);
+  color:#fff;text-align:center;padding:4.5rem 1.2rem 5rem;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"☕";position:absolute;font-size:14rem;opacity:.07;right:-1rem;bottom:-3rem;transform:rotate(-12deg);
+}
+.hero .khmer-orn{color:var(--gold);letter-spacing:.4em;font-size:.85rem;margin-bottom:1rem}
+.hero h1{font-size:clamp(1.6rem,4.5vw,2.6rem);color:#fff;margin-bottom:.8rem}
+.hero h1 span{color:var(--gold)}
+.hero p{max-width:560px;margin:0 auto 1.6rem;color:#D8E8DF;font-size:1rem}
+.btn{
+  display:inline-block;border:none;cursor:pointer;text-decoration:none;
+  font-family:inherit;font-size:1rem;border-radius:999px;padding:.7rem 1.7rem;transition:.25s;
+}
+.btn-gold{background:var(--gold);color:#1E1A05;font-weight:700}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.25)}
+
+/* ---------- Sections ---------- */
+section{max-width:1080px;margin:0 auto;padding:3.5rem 1.2rem}
+.sec-head{text-align:center;margin-bottom:2.2rem}
+.sec-head .eyebrow{color:var(--gold);font-size:.8rem;letter-spacing:.35em;text-transform:uppercase}
+.sec-head h2{font-size:clamp(1.3rem,3vw,1.8rem);color:var(--brand);margin-top:.4rem}
+body.dark .sec-head h2{color:var(--gold)}
+.sec-head p{color:var(--muted);max-width:600px;margin:.5rem auto 0}
+
+/* ---------- Menu controls ---------- */
+.controls{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.8rem}
+#searchInput{
+  flex:1 1 260px;max-width:340px;padding:.65rem 1.1rem;border-radius:999px;
+  border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
+  font-family:inherit;font-size:.95rem;outline:none;transition:.25s;
+}
+#searchInput:focus{border-color:var(--gold)}
+.filters{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center}
+.filter-btn{
+  border:1.5px solid var(--line);background:var(--surface);color:var(--muted);
+  border-radius:999px;padding:.45rem 1.1rem;cursor:pointer;font-family:inherit;font-size:.9rem;transition:.25s;
+}
+.filter-btn:hover{border-color:var(--gold)}
+.filter-btn.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+/* ---------- Product grid ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.3rem}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.4rem 1.2rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.5rem;
+  transition:transform .25s;
+}
+.card:hover{transform:translateY(-5px)}
+.card .emoji{font-size:2.4rem}
+.card h3{font-size:1.05rem;font-family:'Battambang',sans-serif;font-weight:700;color:var(--ink)}
+.card .cat{font-size:.75rem;color:var(--gold);letter-spacing:.15em}
+.card .desc{font-size:.85rem;color:var(--muted);flex:1}
+.card .row{display:flex;align-items:center;justify-content:space-between;margin-top:.4rem}
+.card .price{font-weight:700;color:var(--brand);font-size:1.05rem}
+body.dark .card .price{color:var(--gold)}
+.add-btn{
+  background:var(--gold-soft);color:var(--brand);border:none;border-radius:999px;
+  padding:.4rem 1rem;cursor:pointer;font-family:inherit;font-weight:700;font-size:.85rem;transition:.25s;
+}
+body.dark .add-btn{color:var(--gold)}
+.add-btn:hover{background:var(--gold);color:#1E1A05}
+#emptyMsg{text-align:center;color:var(--muted);padding:2rem;display:none}
+
+/* ---------- Cart ---------- */
+.cart-box{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:1.6rem;max-width:640px;margin:0 auto;
+}
+.cart-item{
+  display:flex;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px dashed var(--line);
+}
+.cart-item .name{flex:1}
+.qty-btn{
+  width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);
+  background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700;transition:.2s;
+}
+.qty-btn:hover{border-color:var(--gold);color:var(--gold)}
+.remove-btn{background:none;border:none;color:var(--danger);cursor:pointer;font-size:1.05rem}
+.cart-total{display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem;padding-top:1rem}
+.cart-total .amount{color:var(--brand)}
+body.dark .cart-total .amount{color:var(--gold)}
+#cartEmpty{text-align:center;color:var(--muted);padding:1.2rem 0}
+
+/* ---------- Form ---------- */
+form{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:1.8rem;max-width:640px;margin:0 auto;
+}
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-weight:700;font-size:.92rem;margin-bottom:.35rem}
+.field label .req{color:var(--danger)}
+.field input,.field select,.field textarea{
+  width:100%;padding:.65rem .9rem;border-radius:10px;border:1.5px solid var(--line);
+  background:var(--bg);color:var(--ink);font-family:inherit;font-size:.95rem;outline:none;transition:.25s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
+.field .error{color:var(--danger);font-size:.8rem;min-height:1.2rem;display:block}
+.field input.invalid{border-color:var(--danger)}
+#formSuccess{
+  display:none;background:var(--gold-soft);border:1.5px solid var(--gold);
+  color:var(--ink);border-radius:10px;padding:1rem 1.2rem;margin-top:1rem;
+}
+
+/* ---------- Footer ---------- */
+footer{
+  background:var(--brand);color:#CFE3D8;text-align:center;
+  padding:1.8rem 1.2rem;margin-top:2rem;font-size:.9rem;
+}
+footer .gold{color:var(--gold)}
+
+/* ---------- Responsive & a11y ---------- */
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+@media (max-width:640px){
+  .nav{justify-content:center}
+  .nav-links{margin-left:0;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER + NAVIGATION ================= -->
+<header>
+  <nav class="nav">
+    <div class="logo"><span class="cup">☕</span> កាហ្វេខ្មែរ</div>
+    <div class="nav-links" id="navLinks">
+      <a href="#home" class="active">ទំព័រដើម</a>
+      <a href="#menu">បញ្ជីភេសជ្ជៈ</a>
+      <a href="#cart">កន្ត្រក <span id="cartCount">0</span></a>
+      <a href="#order">បញ្ជាទិញ</a>
+    </div>
+    <button id="themeBtn" aria-label="ប្ដូររបៀបពន្លឺ">🌙 Dark</button>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home" style="max-width:none">
+  <p class="khmer-orn">៙ ៚ ៙ ៚ ៙</p>
+  <h1>រសជាតិកាហ្វេ <span>បែបខ្មែរ</span><br>ក្នុងគេហទំព័រតែមួយ</h1>
+  <p>នេះជាគេហទំព័រគំរូសម្រាប់មុខវិជ្ជា JavaScript ។ សិស្សត្រូវអនុវត្ត DOM Manipulation, Events, Array Methods និង Form Validation ។</p>
+  <a href="#menu" class="btn btn-gold">មើលបញ្ជីភេសជ្ជៈ ↓</a>
+</section>
+
+<!-- ================= MENU ================= -->
+<section id="menu">
+  <div class="sec-head">
+    <p class="eyebrow">Menu</p>
+    <h2>បញ្ជីភេសជ្ជៈ</h2>
+    <p>ស្វែងរក ឬត្រងតាមប្រភេទ — ទិន្នន័យទាំងអស់បង្ហាញដោយ JavaScript (Array + DOM)</p>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="🔍 ស្វែងរកភេសជ្ជៈ...">
+    <div class="filters" id="filterBox">
+      <button class="filter-btn active" data-cat="all">ទាំងអស់</button>
+      <button class="filter-btn" data-cat="coffee">កាហ្វេ</button>
+      <button class="filter-btn" data-cat="tea">តែ</button>
+      <button class="filter-btn" data-cat="smoothie">ទឹកក្រឡុក</button>
+    </div>
+  </div>
+
+  <div class="grid" id="productGrid"></div>
+  <p id="emptyMsg">😕 រកមិនឃើញភេសជ្ជៈដែលអ្នកស្វែងរកទេ</p>
+</section>
+
+<!-- ================= CART ================= -->
+<section id="cart">
+  <div class="sec-head">
+    <p class="eyebrow">Cart</p>
+    <h2>កន្ត្រកទំនិញ</h2>
+    <p>គណនាតម្លៃសរុបដោយប្រើ <code>reduce()</code></p>
+  </div>
+  <div class="cart-box">
+    <div id="cartItems"></div>
+    <p id="cartEmpty">កន្ត្រកទទេ — សូមជ្រើសរើសភេសជ្ជៈពីបញ្ជីខាងលើ</p>
+    <div class="cart-total">
+      <span>សរុប៖</span>
+      <span class="amount" id="cartTotal">$0.00</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ORDER FORM ================= -->
+<section id="order">
+  <div class="sec-head">
+    <p class="eyebrow">Order</p>
+    <h2>ទម្រង់បញ្ជាទិញ</h2>
+    <p>Form Validation ដោយ JavaScript (មិនប្រើ HTML validation ទេ)</p>
+  </div>
+
+  <form id="orderForm" novalidate>
+    <div class="field">
+      <label for="custName">ឈ្មោះអតិថិជន <span class="req">*</span></label>
+      <input type="text" id="custName" placeholder="ឧ. សុខ ដារា">
+      <span class="error" id="errName"></span>
+    </div>
+    <div class="field">
+      <label for="custPhone">លេខទូរស័ព្ទ <span class="req">*</span></label>
+      <input type="tel" id="custPhone" placeholder="ឧ. 012345678">
+      <span class="error" id="errPhone"></span>
+    </div>
+    <div class="field">
+      <label for="custBranch">សាខា <span class="req">*</span></label>
+      <select id="custBranch">
+        <option value="">-- ជ្រើសរើសសាខា --</option>
+        <option value="svayrieng">ស្វាយរៀង</option>
+        <option value="phnompenh">ភ្នំពេញ</option>
+        <option value="bavet">បាវិត</option>
+      </select>
+      <span class="error" id="errBranch"></span>
+    </div>
+    <div class="field">
+      <label for="custNote">កំណត់ចំណាំបន្ថែម</label>
+      <textarea id="custNote" rows="3" placeholder="ឧ. ស្ករតិច ទឹកកកច្រើន..."></textarea>
+      <span class="error"></span>
+    </div>
+    <button type="submit" class="btn btn-gold">✅ បញ្ជាទិញឥឡូវនេះ</button>
+    <div id="formSuccess"></div>
+  </form>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <p>☕ <span class="gold">កាហ្វេខ្មែរ</span> — គេហទំព័រគំរូ Assignment មុខវិជ្ជា JavaScript</p>
+  <p>© <span id="year"></span> Web Design II</p>
+</footer>
+
+<script>
+/* ============================================================
+   ភាគ JavaScript — សិស្សត្រូវសិក្សា និងអនុវត្តផ្នែកទាំង ៦ ខាងក្រោម
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   ១. ទិន្នន័យផលិតផល (Array of Objects)
+   ------------------------------------------------------------ */
+const products = [
+  { id: 1, name: "កាហ្វេខ្មែរទឹកដោះគោ", cat: "coffee",   price: 1.50, emoji: "☕", desc: "កាហ្វេបុរាណខ្មែរ ជាមួយទឹកដោះគោខាប់" },
+  { id: 2, name: "កាហ្វេទឹកកក",          cat: "coffee",   price: 1.25, emoji: "🧊", desc: "កាហ្វេខ្មៅត្រជាក់ ស្រស់ស្រាយ" },
+  { id: 3, name: "Cappuccino",           cat: "coffee",   price: 2.00, emoji: "🥛", desc: "កាហ្វេអ៊ីតាលី ជាមួយពពុះទឹកដោះគោ" },
+  { id: 4, name: "តែបៃតងទឹកឃ្មុំ",        cat: "tea",      price: 1.75, emoji: "🍵", desc: "តែបៃតង ផ្សំជាមួយទឹកឃ្មុំធម្មជាតិ" },
+  { id: 5, name: "តែក្រូចឆ្មា",            cat: "tea",      price: 1.50, emoji: "🍋", desc: "តែក្រូចឆ្មាត្រជាក់ ជូរអែមស្រស់" },
+  { id: 6, name: "ទឹកក្រឡុកស្វាយ",        cat: "smoothie", price: 2.25, emoji: "🥭", desc: "ស្វាយកែវរមៀតទុំ ក្រឡុកជាមួយទឹកកក" },
+  { id: 7, name: "ទឹកក្រឡុកផ្លែប៊ឺរ",      cat: "smoothie", price: 2.50, emoji: "🥑", desc: "ផ្លែប៊ឺរខ្ចី ទឹកដោះគោ និងទឹកកក" },
+  { id: 8, name: "ទឹកក្រឡុកចេក",          cat: "smoothie", price: 2.00, emoji: "🍌", desc: "ចេកអំបូងទុំ ក្រឡុកជាមួយទឹកដោះគោ" }
+];
+
+// កន្ត្រកទំនិញ (state) — រក្សាទុកក្នុង memory
+let cart = [];
+
+// ស្ថានភាពត្រង (filter state)
+let currentCategory = "all";
+let currentSearch = "";
+
+/* ------------------------------------------------------------
+   ២. DOM Manipulation — បង្ហាញផលិតផលទៅលើទំព័រ
+   ------------------------------------------------------------ */
+const productGrid = document.getElementById("productGrid");
+const emptyMsg = document.getElementById("emptyMsg");
+
+function renderProducts() {
+  // ត្រងតាមប្រភេទ + ពាក្យស្វែងរក (Array.filter)
+  const filtered = products.filter(function (p) {
+    const matchCat = currentCategory === "all" || p.cat === currentCategory;
+    const matchSearch = p.name.toLowerCase().includes(currentSearch.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  // បង្កើត HTML ដោយ Array.map + Template Literals
+  productGrid.innerHTML = filtered.map(function (p) {
+    return `
+      <article class="card">
+        <div class="emoji">${p.emoji}</div>
+        <p class="cat">${catName(p.cat)}</p>
+        <h3>${p.name}</h3>
+        <p class="desc">${p.desc}</p>
+        <div class="row">
+          <span class="price">$${p.price.toFixed(2)}</span>
+          <button class="add-btn" data-id="${p.id}">+ បន្ថែម</button>
+        </div>
+      </article>`;
+  }).join("");
+
+  // បង្ហាញសារ ប្រសិនបើគ្មានលទ្ធផល
+  emptyMsg.style.display = filtered.length === 0 ? "block" : "none";
+}
+
+// បំលែងឈ្មោះប្រភេទជាភាសាខ្មែរ
+function catName(cat) {
+  const names = { coffee: "កាហ្វេ", tea: "តែ", smoothie: "ទឹកក្រឡុក" };
+  return names[cat] || cat;
+}
+
+/* ------------------------------------------------------------
+   ៣. Events — ស្វែងរក, ត្រង, បន្ថែមទៅកន្ត្រក (Event Delegation)
+   ------------------------------------------------------------ */
+// ព្រឹត្តិការណ៍ input សម្រាប់ស្វែងរកភ្លាមៗ (live search)
+document.getElementById("searchInput").addEventListener("input", function (e) {
+  currentSearch = e.target.value.trim();
+  renderProducts();
+});
+
+// ប៊ូតុងត្រងតាមប្រភេទ
+document.getElementById("filterBox").addEventListener("click", function (e) {
+  if (!e.target.classList.contains("filter-btn")) return;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  e.target.classList.add("active");
+  currentCategory = e.target.dataset.cat;
+  renderProducts();
+});
+
+// Event Delegation — ស្ដាប់ click លើ grid តែមួយ ជំនួសការភ្ជាប់រាល់ប៊ូតុង
+productGrid.addEventListener("click", function (e) {
+  if (!e.target.classList.contains("add-btn")) return;
+  addToCart(Number(e.target.dataset.id));
+});
+
+/* ------------------------------------------------------------
+   ៤. Cart Logic — Array Methods (find, filter, reduce)
+   ------------------------------------------------------------ */
+const cartItemsBox = document.getElementById("cartItems");
+const cartEmptyMsg = document.getElementById("cartEmpty");
+const cartTotalEl = document.getElementById("cartTotal");
+const cartCountEl = document.getElementById("cartCount");
+
+function addToCart(id) {
+  const found = cart.find(item => item.id === id);
+  if (found) {
+    found.qty++; // មានរួចហើយ → បន្ថែមចំនួន
+  } else {
+    const product = products.find(p => p.id === id);
+    cart.push({ ...product, qty: 1 }); // Spread operator ចម្លង object
+  }
+  renderCart();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeItem(id);
+  else renderCart();
+}
+
+function removeItem(id) {
+  cart = cart.filter(i => i.id !== id); // លុបដោយ filter
+  renderCart();
+}
+
+function renderCart() {
+  cartItemsBox.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <span>${item.emoji}</span>
+      <span class="name">${item.name}</span>
+      <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+      <strong>${item.qty}</strong>
+      <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+      <span>$${(item.price * item.qty).toFixed(2)}</span>
+      <button class="remove-btn" onclick="removeItem(${item.id})" aria-label="លុប">🗑️</button>
+    </div>`).join("");
+
+  // reduce() — គណនាតម្លៃសរុប និងចំនួនសរុប
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+
+  cartTotalEl.textContent = "$" + total.toFixed(2);
+  cartCountEl.textContent = count;
+  cartEmptyMsg.style.display = cart.length === 0 ? "block" : "none";
+}
+
+/* ------------------------------------------------------------
+   ៥. Form Validation — ពិនិត្យទិន្នន័យមុនបញ្ជូន
+   ------------------------------------------------------------ */
+document.getElementById("orderForm").addEventListener("submit", function (e) {
+  e.preventDefault(); // បញ្ឈប់ការ reload ទំព័រ
+
+  const name = document.getElementById("custName");
+  const phone = document.getElementById("custPhone");
+  const branch = document.getElementById("custBranch");
+  let valid = true;
+
+  // ពិនិត្យឈ្មោះ — យ៉ាងតិច ២ តួអក្សរ
+  if (name.value.trim().length < 2) {
+    showError(name, "errName", "សូមបញ្ចូលឈ្មោះ យ៉ាងតិច ២ តួអក្សរ");
+    valid = false;
+  } else clearError(name, "errName");
+
+  // ពិនិត្យលេខទូរស័ព្ទ — Regular Expression (លេខកម្ពុជា ៩-១០ ខ្ទង់)
+  const phonePattern = /^0[1-9][0-9]{7,8}$/;
+  if (!phonePattern.test(phone.value.trim())) {
+    showError(phone, "errPhone", "លេខទូរស័ព្ទមិនត្រឹមត្រូវ (ឧ. 012345678)");
+    valid = false;
+  } else clearError(phone, "errPhone");
+
+  // ពិនិត្យសាខា
+  if (branch.value === "") {
+    showError(branch, "errBranch", "សូមជ្រើសរើសសាខា");
+    valid = false;
+  } else clearError(branch, "errBranch");
+
+  // ពិនិត្យកន្ត្រក — ត្រូវមានទំនិញយ៉ាងតិច ១
+  if (valid && cart.length === 0) {
+    alert("⚠️ កន្ត្រករបស់អ្នកនៅទទេ! សូមជ្រើសរើសភេសជ្ជៈជាមុនសិន។");
+    return;
+  }
+
+  if (valid) {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const box = document.getElementById("formSuccess");
+    box.style.display = "block";
+    box.innerHTML = `🎉 <strong>ការបញ្ជាទិញជោគជ័យ!</strong><br>
+      សូមអរគុណ <strong>${name.value.trim()}</strong> —
+      ទំនិញ ${cart.reduce((s,i)=>s+i.qty,0)} មុខ តម្លៃសរុប
+      <strong>$${total.toFixed(2)}</strong> នឹងរួចរាល់ក្នុងពេល ១៥ នាទី។`;
+    this.reset();
+    cart = [];
+    renderCart();
+  }
+});
+
+function showError(input, errId, msg) {
+  input.classList.add("invalid");
+  document.getElementById(errId).textContent = msg;
+}
+function clearError(input, errId) {
+  input.classList.remove("invalid");
+  document.getElementById(errId).textContent = "";
+}
+
+/* ------------------------------------------------------------
+   ៦. Dark / Light Mode + Active Nav + ឆ្នាំបច្ចុប្បន្ន
+   ------------------------------------------------------------ */
+document.getElementById("themeBtn").addEventListener("click", function () {
+  document.body.classList.toggle("dark");
+  this.textContent = document.body.classList.contains("dark") ? "☀️ Light" : "🌙 Dark";
+});
+
+// Active link ពេល scroll (IntersectionObserver)
+const sections = document.querySelectorAll("section[id]");
+const navAnchors = document.querySelectorAll(".nav-links a");
+const observer = new IntersectionObserver(function (entries) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navAnchors.forEach(a => a.classList.remove("active"));
+      const link = document.querySelector('.nav-links a[href="#' + entry.target.id + '"]');
+      if (link) link.classList.add("active");
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(sec => observer.observe(sec));
+
+// បង្ហាញឆ្នាំបច្ចុប្បន្ន (Date object)
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// ចាប់ផ្ដើមបង្ហាញទិន្នន័យលើកដំបូង
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>
