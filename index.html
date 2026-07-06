@@ -3,317 +3,800 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>កាហ្វេខ្មែរ — គម្រោង Assignment JavaScript</title>
-<link href="https://fonts.googleapis.com/css2?family=Moul&family=Battambang:wght@300;400;700&family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+<title>JavaScript Assignments — មជ្ឈមណ្ឌលគំរូទាំងអស់</title>
+<link href="https://fonts.googleapis.com/css2?family=Battambang:wght@300;400;700&family=Moul&family=Noto+Sans+Khmer:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   ភាគ CSS — ប្រព័ន្ធពណ៌ (CSS Variables) សម្រាប់ Light / Dark Mode
+   ១. GLOBAL — រចនាសម្ព័ន្ធទូទៅ (Sidebar + Content)
    ============================================================ */
 :root{
-  --bg:#F2F7F4;
-  --surface:#FFFFFF;
-  --ink:#12281E;
-  --muted:#5B7268;
-  --brand:#0F3D2E;        /* បៃតងចាស់ */
-  --brand-2:#1B5E43;
-  --gold:#C9A227;         /* មាស */
-  --gold-soft:#F3E7C3;
-  --danger:#B3402E;
-  --line:#DCE8E1;
-  --shadow:0 10px 30px rgba(15,61,46,.10);
+  --side-bg:#0F2438;      /* ខៀវទឹកប៊ិចចាស់ */
+  --side-ink:#C6D8E8;
+  --side-active:#1B5385;
+  --accent:#F0B429;       /* មាស */
+  --bg:#F3F7FA;
+  --ink:#1E2B38;
+  --muted:#6B7F92;
+  --white:#FFFFFF;
+  --line:#DCE7F0;
   --radius:14px;
 }
-body.dark{
-  --bg:#0C1712;
-  --surface:#132520;
-  --ink:#EAF3EE;
-  --muted:#9DB4A9;
-  --brand:#1E6B4C;
-  --brand-2:#2E8B63;
-  --gold:#E3BE4A;
-  --gold-soft:#3A3218;
-  --danger:#E06A55;
-  --line:#22392F;
-  --shadow:0 10px 30px rgba(0,0,0,.35);
-}
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
 body{
-  font-family:'Battambang','Khmer OS Siemreap','Noto Sans Khmer',sans-serif;
-  background:var(--bg);color:var(--ink);
-  line-height:1.85;
-  transition:background .35s,color .35s;
+  font-family:'Battambang','Khmer OS Siemreap',sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.85;
 }
-h1,h2,h3{font-family:'Moul','Khmer OS Muol Light','Battambang',serif;font-weight:400;line-height:1.6}
+h1,h2,h3{font-family:'Moul','Khmer OS Muol Light',serif;font-weight:400;line-height:1.7}
 
-/* ---------- Header / Navigation ---------- */
-header{
-  position:sticky;top:0;z-index:50;
-  background:var(--brand);color:#fff;
-  box-shadow:var(--shadow);
+/* ---------- Left Sidebar ---------- */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:250px;
+  background:var(--side-bg);color:var(--side-ink);
+  display:flex;flex-direction:column;z-index:100;
+  transition:transform .3s;
 }
-.nav{
-  max-width:1080px;margin:0 auto;padding:.7rem 1.2rem;
-  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+.side-logo{
+  padding:1.3rem 1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);
 }
-.logo{font-family:'Moul','Khmer OS Muol Light',serif;font-size:1.15rem;color:var(--gold);display:flex;align-items:center;gap:.5rem}
-.logo .cup{font-size:1.4rem}
-.nav-links{display:flex;gap:.25rem;margin-left:auto;flex-wrap:wrap}
-.nav-links a{
-  color:#EAF3EE;text-decoration:none;padding:.35rem .8rem;border-radius:999px;
-  font-size:.92rem;transition:.25s;
+.side-logo h1{font-size:1rem;color:#fff}
+.side-logo h1 span{color:var(--accent)}
+.side-logo p{font-size:.72rem;color:#7E97AC}
+.menu{flex:1;padding:.8rem .7rem;overflow-y:auto}
+.menu-label{
+  font-size:.68rem;letter-spacing:.18em;color:#5F7A92;
+  padding:.6rem .6rem .3rem;text-transform:uppercase;
 }
-.nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,.16);color:var(--gold)}
-#themeBtn{
-  border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;
-  border-radius:999px;padding:.35rem .9rem;cursor:pointer;font-family:inherit;font-size:.9rem;
-  transition:.25s;
+.menu-item{
+  display:flex;align-items:center;gap:.65rem;width:100%;
+  background:none;border:none;color:var(--side-ink);
+  font-family:inherit;font-size:.92rem;text-align:left;
+  padding:.6rem .8rem;border-radius:10px;cursor:pointer;
+  transition:.2s;margin-bottom:.15rem;
 }
-#themeBtn:hover{background:var(--gold);color:var(--brand);border-color:var(--gold)}
-#cartCount{
-  background:var(--gold);color:var(--brand);border-radius:999px;
-  padding:0 .5rem;font-weight:700;font-size:.85rem;margin-left:.3rem;
+.menu-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.menu-item.active{background:var(--side-active);color:#fff;font-weight:700}
+.menu-item .lvl{
+  margin-left:auto;font-size:.62rem;border-radius:99px;padding:0 .5rem;
+  background:rgba(255,255,255,.12);
 }
-
-/* ---------- Hero ---------- */
-.hero{
-  background:linear-gradient(135deg,var(--brand) 0%,var(--brand-2) 100%);
-  color:#fff;text-align:center;padding:4.5rem 1.2rem 5rem;position:relative;overflow:hidden;
-}
-.hero::after{
-  content:"☕";position:absolute;font-size:14rem;opacity:.07;right:-1rem;bottom:-3rem;transform:rotate(-12deg);
-}
-.hero .khmer-orn{color:var(--gold);letter-spacing:.4em;font-size:.85rem;margin-bottom:1rem}
-.hero h1{font-size:clamp(1.6rem,4.5vw,2.6rem);color:#fff;margin-bottom:.8rem}
-.hero h1 span{color:var(--gold)}
-.hero p{max-width:560px;margin:0 auto 1.6rem;color:#D8E8DF;font-size:1rem}
-.btn{
-  display:inline-block;border:none;cursor:pointer;text-decoration:none;
-  font-family:inherit;font-size:1rem;border-radius:999px;padding:.7rem 1.7rem;transition:.25s;
-}
-.btn-gold{background:var(--gold);color:#1E1A05;font-weight:700}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.25)}
-
-/* ---------- Sections ---------- */
-section{max-width:1080px;margin:0 auto;padding:3.5rem 1.2rem}
-.sec-head{text-align:center;margin-bottom:2.2rem}
-.sec-head .eyebrow{color:var(--gold);font-size:.8rem;letter-spacing:.35em;text-transform:uppercase}
-.sec-head h2{font-size:clamp(1.3rem,3vw,1.8rem);color:var(--brand);margin-top:.4rem}
-body.dark .sec-head h2{color:var(--gold)}
-.sec-head p{color:var(--muted);max-width:600px;margin:.5rem auto 0}
-
-/* ---------- Menu controls ---------- */
-.controls{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.8rem}
-#searchInput{
-  flex:1 1 260px;max-width:340px;padding:.65rem 1.1rem;border-radius:999px;
-  border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
-  font-family:inherit;font-size:.95rem;outline:none;transition:.25s;
-}
-#searchInput:focus{border-color:var(--gold)}
-.filters{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center}
-.filter-btn{
-  border:1.5px solid var(--line);background:var(--surface);color:var(--muted);
-  border-radius:999px;padding:.45rem 1.1rem;cursor:pointer;font-family:inherit;font-size:.9rem;transition:.25s;
-}
-.filter-btn:hover{border-color:var(--gold)}
-.filter-btn.active{background:var(--brand);border-color:var(--brand);color:#fff}
-
-/* ---------- Product grid ---------- */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.3rem}
-.card{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-  padding:1.4rem 1.2rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.5rem;
-  transition:transform .25s;
-}
-.card:hover{transform:translateY(-5px)}
-.card .emoji{font-size:2.4rem}
-.card h3{font-size:1.05rem;font-family:'Battambang',sans-serif;font-weight:700;color:var(--ink)}
-.card .cat{font-size:.75rem;color:var(--gold);letter-spacing:.15em}
-.card .desc{font-size:.85rem;color:var(--muted);flex:1}
-.card .row{display:flex;align-items:center;justify-content:space-between;margin-top:.4rem}
-.card .price{font-weight:700;color:var(--brand);font-size:1.05rem}
-body.dark .card .price{color:var(--gold)}
-.add-btn{
-  background:var(--gold-soft);color:var(--brand);border:none;border-radius:999px;
-  padding:.4rem 1rem;cursor:pointer;font-family:inherit;font-weight:700;font-size:.85rem;transition:.25s;
-}
-body.dark .add-btn{color:var(--gold)}
-.add-btn:hover{background:var(--gold);color:#1E1A05}
-#emptyMsg{text-align:center;color:var(--muted);padding:2rem;display:none}
-
-/* ---------- Cart ---------- */
-.cart-box{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:var(--shadow);padding:1.6rem;max-width:640px;margin:0 auto;
-}
-.cart-item{
-  display:flex;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px dashed var(--line);
-}
-.cart-item .name{flex:1}
-.qty-btn{
-  width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);
-  background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700;transition:.2s;
-}
-.qty-btn:hover{border-color:var(--gold);color:var(--gold)}
-.remove-btn{background:none;border:none;color:var(--danger);cursor:pointer;font-size:1.05rem}
-.cart-total{display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem;padding-top:1rem}
-.cart-total .amount{color:var(--brand)}
-body.dark .cart-total .amount{color:var(--gold)}
-#cartEmpty{text-align:center;color:var(--muted);padding:1.2rem 0}
-
-/* ---------- Form ---------- */
-form{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:var(--shadow);padding:1.8rem;max-width:640px;margin:0 auto;
-}
-.field{margin-bottom:1.1rem}
-.field label{display:block;font-weight:700;font-size:.92rem;margin-bottom:.35rem}
-.field label .req{color:var(--danger)}
-.field input,.field select,.field textarea{
-  width:100%;padding:.65rem .9rem;border-radius:10px;border:1.5px solid var(--line);
-  background:var(--bg);color:var(--ink);font-family:inherit;font-size:.95rem;outline:none;transition:.25s;
-}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
-.field .error{color:var(--danger);font-size:.8rem;min-height:1.2rem;display:block}
-.field input.invalid{border-color:var(--danger)}
-#formSuccess{
-  display:none;background:var(--gold-soft);border:1.5px solid var(--gold);
-  color:var(--ink);border-radius:10px;padding:1rem 1.2rem;margin-top:1rem;
+.menu-item.active .lvl{background:var(--accent);color:#3A2A00;font-weight:700}
+.side-foot{
+  padding:.9rem 1.2rem;font-size:.7rem;color:#5F7A92;
+  border-top:1px solid rgba(255,255,255,.08);
 }
 
-/* ---------- Footer ---------- */
-footer{
-  background:var(--brand);color:#CFE3D8;text-align:center;
-  padding:1.8rem 1.2rem;margin-top:2rem;font-size:.9rem;
-}
-footer .gold{color:var(--gold)}
+/* ---------- Content area ---------- */
+.content{margin-left:250px;min-height:100vh;padding:1.6rem 1.6rem 3rem}
+.page{display:none;max-width:960px;margin:0 auto;animation:fadeIn .3s}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page-head{margin-bottom:1.4rem}
+.page-head .crumb{font-size:.78rem;color:var(--muted)}
+.page-head h2{font-size:1.35rem;color:#123A5F;margin-top:.2rem}
+.page-head .desc{color:var(--muted);font-size:.9rem}
 
-/* ---------- Responsive & a11y ---------- */
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
-@media (max-width:640px){
-  .nav{justify-content:center}
-  .nav-links{margin-left:0;justify-content:center}
+/* ---------- Hamburger (mobile) ---------- */
+#menuToggle{
+  display:none;position:fixed;top:.9rem;left:.9rem;z-index:200;
+  background:var(--side-bg);color:#fff;border:none;border-radius:10px;
+  width:42px;height:42px;font-size:1.2rem;cursor:pointer;
 }
+@media(max-width:860px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:none;box-shadow:0 0 40px rgba(0,0,0,.4)}
+  .content{margin-left:0;padding-top:4rem}
+  #menuToggle{display:block}
+}
+
+/* ============================================================
+   ២. ទំព័រដើម (HOME) — កាតបញ្ជី Assignment
+   ============================================================ */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.1rem}
+.home-card{
+  background:var(--white);border:1.5px solid var(--line);border-radius:var(--radius);
+  padding:1.3rem;cursor:pointer;transition:.25s;box-shadow:0 6px 18px rgba(18,58,95,.06);
+}
+.home-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.home-card .emoji{font-size:2rem}
+.home-card h3{font-family:'Battambang';font-weight:700;font-size:1.02rem;margin:.3rem 0 .1rem}
+.home-card p{font-size:.82rem;color:var(--muted)}
+.home-card .tag{
+  display:inline-block;font-size:.68rem;font-weight:700;border-radius:99px;
+  padding:.05rem .6rem;margin-top:.5rem;
+}
+.tag.easy{background:#DFF5EC;color:#0E8C5A}
+.tag.mid{background:#FBF2DC;color:#9A6E00}
+.tag.big{background:#FBE1DE;color:#C74B3C}
+
+/* ============================================================
+   ៣. TO-DO LIST (t-)
+   ============================================================ */
+.t-app{
+  max-width:520px;background:#FFFDF8;border:2px solid #E8D9C3;border-radius:18px;
+  padding:1.6rem 1.4rem;box-shadow:0 10px 26px rgba(120,85,40,.1);
+}
+.t-row{display:flex;gap:.5rem;margin-bottom:.3rem}
+#tInput{flex:1;padding:.6rem 1rem;font-family:inherit;font-size:.95rem;border:2px solid #E8D9C3;border-radius:12px;outline:none}
+#tInput:focus{border-color:#E3A63B}
+#tAdd{background:#E3A63B;color:#3B2600;border:none;border-radius:12px;padding:.6rem 1.2rem;font-family:inherit;font-weight:700;cursor:pointer}
+#tAdd:hover{background:#D18F1F}
+#tErr{color:#C0392B;font-size:.82rem;min-height:1.3rem;display:block}
+.t-stats{display:flex;justify-content:space-around;text-align:center;background:#FBF1E0;border-radius:12px;padding:.6rem;margin-bottom:1rem}
+.t-stats strong{display:block;font-size:1.2rem;color:#8B5E1F}
+.t-stats span{font-size:.75rem;color:#A08962}
+#tList{list-style:none}
+#tList li{display:flex;align-items:center;gap:.7rem;background:#FDF9F2;border:1.5px solid #F0E4D0;border-radius:12px;padding:.55rem .9rem;margin-bottom:.5rem}
+#tList li .text{flex:1;font-size:.95rem}
+#tList li.done{opacity:.6}
+#tList li.done .text{text-decoration:line-through;color:#A08962}
+.t-btn{border:none;background:none;cursor:pointer;font-size:1.1rem}
+#tEmpty{text-align:center;color:#C9B896;padding:.8rem 0;font-size:.9rem}
+
+/* ============================================================
+   ៤. PROFILE (p-)
+   ============================================================ */
+.p-wrap{max-width:640px}
+.p-hero{background:#1D4E89;color:#fff;text-align:center;border-radius:var(--radius);padding:2rem 1rem 1.6rem}
+.p-avatar{width:80px;height:80px;border-radius:50%;background:#FFC94A;display:flex;align-items:center;justify-content:center;font-size:2.6rem;margin:0 auto .8rem;border:4px solid #fff}
+.p-hero h3{font-family:'Moul';font-size:1.2rem;color:#fff}
+.p-hero p{color:#CFE0F5;font-size:.88rem}
+.p-tabs{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;margin:.9rem 0 1.1rem}
+.p-tab-btn{background:#fff;border:1.5px solid var(--line);color:var(--muted);padding:.5rem 1.3rem;border-radius:999px;cursor:pointer;font-family:inherit;font-size:.92rem}
+.p-tab-btn.active{background:#FFC94A;border-color:#FFC94A;color:#3A2E00;font-weight:700}
+.p-page{display:none}
+.p-page.active{display:block}
+.p-box{background:#fff;border:1.5px solid var(--line);border-radius:var(--radius);padding:1.3rem;margin-bottom:1rem}
+.p-box h3{font-family:'Battambang';font-weight:700;color:#1D4E89;font-size:1rem;margin-bottom:.6rem}
+.p-center{text-align:center}
+#pLikeBtn{background:#1D4E89;color:#fff;border:none;font-family:inherit;padding:.55rem 1.5rem;border-radius:999px;font-size:.95rem;cursor:pointer}
+#pLikeBtn:active{transform:scale(.95)}
+#pLikeCount{font-weight:700;color:#1D4E89;font-size:1.15rem}
+#pClock{font-size:1.5rem;font-weight:700;color:#1D4E89;letter-spacing:.08em}
+.p-skill{margin-bottom:.8rem}
+.p-skill .top{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:.2rem}
+.p-bar{background:#EAF2FB;border-radius:99px;height:11px;overflow:hidden}
+.p-bar span{display:block;height:100%;background:#1D4E89;border-radius:99px}
+.p-wrap input,.p-wrap textarea{width:100%;padding:.55rem .9rem;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:.92rem;margin-bottom:.6rem;outline:none;background:var(--bg)}
+.p-wrap input:focus,.p-wrap textarea:focus{border-color:#1D4E89}
+#pAddBtn{background:#FFC94A;color:#3A2E00;border:none;font-family:inherit;font-weight:700;padding:.5rem 1.4rem;border-radius:999px;cursor:pointer}
+#pErr{color:#C0392B;font-size:.82rem;min-height:1.1rem;display:block}
+.p-comment{background:#EAF2FB;border-radius:10px;padding:.6rem 1rem;margin-top:.6rem;font-size:.9rem}
+.p-comment strong{color:#1D4E89}
+
+/* ============================================================
+   ៥. QUIZ (q-)
+   ============================================================ */
+.q-box{
+  background:#fff;max-width:560px;border-radius:18px;padding:1.6rem 1.5rem;
+  border:1.5px solid #E5DCF4;box-shadow:0 12px 30px rgba(75,42,110,.12);
+}
+.q-prog-row{display:flex;justify-content:space-between;font-size:.85rem;color:#7A6F96;margin-bottom:.35rem}
+#qScoreTag{background:#F3EDFB;color:#4B2A6E;font-weight:700;padding:.05rem .7rem;border-radius:99px}
+.q-prog{background:#EFEAF7;border-radius:99px;height:10px;overflow:hidden;margin-bottom:1.1rem}
+.q-prog span{display:block;height:100%;width:0;background:#8E5AD1;transition:width .3s;border-radius:99px}
+#qText{font-weight:700;font-size:1.02rem;margin-bottom:.9rem}
+.q-ans{display:block;width:100%;text-align:left;background:#F8F5FD;border:2px solid #E5DCF4;border-radius:12px;padding:.65rem 1rem;margin-bottom:.55rem;font-family:inherit;font-size:.93rem;cursor:pointer;transition:.2s;color:var(--ink)}
+.q-ans:hover{border-color:#8E5AD1}
+.q-ans.correct{background:#E3F6E8;border-color:#3BA55C;font-weight:700}
+.q-ans.wrong{background:#FDE8E6;border-color:#D64541}
+.q-ans:disabled{cursor:not-allowed}
+#qFeedback{min-height:1.5rem;font-size:.9rem;font-weight:700;text-align:center;margin:.3rem 0}
+#qFeedback.good{color:#3BA55C}
+#qFeedback.bad{color:#D64541}
+.q-btn{display:block;width:100%;border:none;border-radius:12px;background:#8E5AD1;color:#fff;font-family:inherit;font-weight:700;font-size:.98rem;padding:.7rem;cursor:pointer;margin-top:.4rem}
+.q-btn:hover{background:#7443B5}
+.q-btn:disabled{background:#CBBDE6;cursor:not-allowed}
+#qResult{display:none;text-align:center}
+#qResultEmoji{font-size:3.6rem}
+#qResultScore{font-size:1.8rem;font-weight:700;color:#4B2A6E;font-family:'Moul'}
+#qResultMsg{color:#7A6F96;margin-bottom:.9rem}
+
+/* ============================================================
+   ៦. COFFEE SHOP (c-)
+   ============================================================ */
+.c-controls{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:1.3rem}
+#cSearch{flex:1 1 220px;max-width:320px;padding:.6rem 1rem;border-radius:999px;border:1.5px solid var(--line);font-family:inherit;font-size:.92rem;outline:none;background:#fff}
+#cSearch:focus{border-color:#C9A227}
+.c-filters{display:flex;gap:.4rem;flex-wrap:wrap}
+.c-fbtn{border:1.5px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:.42rem 1rem;cursor:pointer;font-family:inherit;font-size:.88rem}
+.c-fbtn.active{background:#0F3D2E;border-color:#0F3D2E;color:#fff}
+.c-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1.6rem}
+.c-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem;display:flex;flex-direction:column;gap:.35rem;box-shadow:0 8px 22px rgba(15,61,46,.07)}
+.c-card .emoji{font-size:2rem}
+.c-card h3{font-family:'Battambang';font-weight:700;font-size:.98rem}
+.c-card .cat{font-size:.7rem;color:#C9A227;letter-spacing:.12em}
+.c-card .desc{font-size:.8rem;color:var(--muted);flex:1}
+.c-card .row{display:flex;align-items:center;justify-content:space-between;margin-top:.3rem}
+.c-card .price{font-weight:700;color:#0F3D2E}
+.c-add{background:#F3E7C3;color:#0F3D2E;border:none;border-radius:999px;padding:.35rem .9rem;cursor:pointer;font-family:inherit;font-weight:700;font-size:.8rem}
+.c-add:hover{background:#C9A227}
+#cEmpty{text-align:center;color:var(--muted);padding:1.4rem;display:none}
+.c-cart{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.3rem;max-width:560px}
+.c-cart h3{font-family:'Battambang';font-weight:700;color:#0F3D2E;margin-bottom:.6rem}
+.c-item{display:flex;align-items:center;gap:.7rem;padding:.55rem 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+.c-item .name{flex:1}
+.c-qty{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-weight:700}
+.c-del{background:none;border:none;color:#B3402E;cursor:pointer;font-size:1rem}
+.c-total{display:flex;justify-content:space-between;font-weight:700;font-size:1.05rem;padding-top:.8rem}
+.c-total .amount{color:#0F3D2E}
+#cCartEmpty{text-align:center;color:var(--muted);padding:.9rem 0;font-size:.9rem}
+
+/* ============================================================
+   ៧. STUDENT MANAGEMENT (s-)
+   ============================================================ */
+.s-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-bottom:1.3rem}
+.s-stat{background:#fff;border:1.5px solid var(--line);border-radius:var(--radius);padding:.85rem 1rem}
+.s-stat strong{display:block;font-size:1.35rem;color:#123A5F}
+.s-stat span{font-size:.76rem;color:var(--muted)}
+.s-stat.teal strong{color:#0E8C7F}
+.s-stat.amber strong{color:#E8A425}
+.s-stat.red strong{color:#C74B3C}
+.s-panel{background:#fff;border:1.5px solid var(--line);border-radius:var(--radius);padding:1.2rem;margin-bottom:1.2rem}
+.s-panel h3{font-family:'Battambang';font-weight:700;font-size:.98rem;color:#123A5F;margin-bottom:.8rem}
+#sMode{font-size:.78rem;color:#0E8C7F;font-weight:700}
+.s-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem}
+.s-field label{display:block;font-size:.82rem;font-weight:700;margin-bottom:.2rem}
+.s-field input,.s-field select{width:100%;padding:.5rem .75rem;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:.9rem;background:var(--bg);outline:none}
+.s-field input:focus,.s-field select:focus{border-color:#1B5385}
+.s-field .err{color:#C74B3C;font-size:.72rem;min-height:1rem;display:block}
+.s-actions{margin-top:.3rem;display:flex;gap:.5rem}
+.s-btn{border:none;border-radius:99px;padding:.5rem 1.3rem;cursor:pointer;font-family:inherit;font-size:.86rem;font-weight:700}
+.s-primary{background:#123A5F;color:#fff}
+.s-primary:hover{background:#1B5385}
+.s-ghost{background:#EAF3FB;color:#123A5F}
+.s-toolbar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem}
+.s-toolbar input,.s-toolbar select{padding:.45rem .85rem;border:1.5px solid var(--line);border-radius:99px;font-family:inherit;font-size:.85rem;background:#fff;outline:none}
+.s-toolbar input{flex:1 1 180px}
+.s-twrap{overflow-x:auto}
+.s-twrap table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:600px}
+.s-twrap th{background:#EAF3FB;color:#123A5F;text-align:left;padding:.5rem .7rem;font-size:.78rem;border-bottom:2px solid var(--line)}
+.s-twrap td{padding:.5rem .7rem;border-bottom:1px solid var(--line)}
+.s-grade{display:inline-block;min-width:30px;text-align:center;font-weight:700;border-radius:8px;padding:0 .4rem;font-size:.78rem}
+.s-grade.A{background:#DFF5EC;color:#0E8C5A}
+.s-grade.B{background:#E4F0FB;color:#1B5385}
+.s-grade.C{background:#FBF2DC;color:#9A6E00}
+.s-grade.D{background:#FBE9DC;color:#B25A18}
+.s-grade.F{background:#FBE1DE;color:#C74B3C}
+.s-icon{background:none;border:none;cursor:pointer;font-size:.95rem;padding:.1rem .25rem}
+#sEmpty{text-align:center;color:var(--muted);padding:1rem;display:none}
 </style>
 </head>
 <body>
 
-<!-- ================= HEADER + NAVIGATION ================= -->
-<header>
-  <nav class="nav">
-    <div class="logo"><span class="cup">☕</span> កាហ្វេខ្មែរ</div>
-    <div class="nav-links" id="navLinks">
-      <a href="#home" class="active">ទំព័រដើម</a>
-      <a href="#menu">បញ្ជីភេសជ្ជៈ</a>
-      <a href="#cart">កន្ត្រក <span id="cartCount">0</span></a>
-      <a href="#order">បញ្ជាទិញ</a>
-    </div>
-    <button id="themeBtn" aria-label="ប្ដូររបៀបពន្លឺ">🌙 Dark</button>
+<!-- ================= HAMBURGER (mobile) ================= -->
+<button id="menuToggle" aria-label="បើកម៉ឺនុយ">☰</button>
+
+<!-- ================= LEFT SIDEBAR MENU ================= -->
+<aside class="sidebar" id="sidebar">
+  <div class="side-logo">
+    <h1>⚡ JS <span>Assignments</span></h1>
+    <p>Web Design II — គំរូទាំងអស់</p>
+  </div>
+  <nav class="menu">
+    <p class="menu-label">ទំព័រដើម</p>
+    <button class="menu-item active" data-page="home">🏠 ទំព័រដើម</button>
+
+    <p class="menu-label">Assignment ងាយ</p>
+    <button class="menu-item" data-page="todo">📝 បញ្ជីកិច្ចការ <span class="lvl">ងាយបំផុត</span></button>
+    <button class="menu-item" data-page="quiz">🎯 ល្បែងសំណួរ <span class="lvl">ងាយ</span></button>
+    <button class="menu-item" data-page="profile">👨‍🎓 ប្រវត្តិរូបសិស្ស <span class="lvl">ងាយ</span></button>
+
+    <p class="menu-label">Assignment មធ្យម / ធំ</p>
+    <button class="menu-item" data-page="coffee">☕ ហាងកាហ្វេខ្មែរ <span class="lvl">មធ្យម</span></button>
+    <button class="menu-item" data-page="sms">🎓 គ្រប់គ្រងសិស្ស <span class="lvl">BIG</span></button>
   </nav>
-</header>
+  <div class="side-foot">© <span id="footYear"></span> Web Design II<br>JavaScript Assignment Hub</div>
+</aside>
 
-<!-- ================= HERO ================= -->
-<section class="hero" id="home" style="max-width:none">
-  <p class="khmer-orn">៙ ៚ ៙ ៚ ៙</p>
-  <h1>រសជាតិកាហ្វេ <span>បែបខ្មែរ</span><br>ក្នុងគេហទំព័រតែមួយ</h1>
-  <p>នេះជាគេហទំព័រគំរូសម្រាប់មុខវិជ្ជា JavaScript ។ សិស្សត្រូវអនុវត្ត DOM Manipulation, Events, Array Methods និង Form Validation ។</p>
-  <a href="#menu" class="btn btn-gold">មើលបញ្ជីភេសជ្ជៈ ↓</a>
-</section>
+<!-- ================= CONTENT ================= -->
+<main class="content">
 
-<!-- ================= MENU ================= -->
-<section id="menu">
-  <div class="sec-head">
-    <p class="eyebrow">Menu</p>
-    <h2>បញ្ជីភេសជ្ជៈ</h2>
-    <p>ស្វែងរក ឬត្រងតាមប្រភេទ — ទិន្នន័យទាំងអស់បង្ហាញដោយ JavaScript (Array + DOM)</p>
-  </div>
-
-  <div class="controls">
-    <input type="text" id="searchInput" placeholder="🔍 ស្វែងរកភេសជ្ជៈ...">
-    <div class="filters" id="filterBox">
-      <button class="filter-btn active" data-cat="all">ទាំងអស់</button>
-      <button class="filter-btn" data-cat="coffee">កាហ្វេ</button>
-      <button class="filter-btn" data-cat="tea">តែ</button>
-      <button class="filter-btn" data-cat="smoothie">ទឹកក្រឡុក</button>
+  <!-- ========== PAGE: HOME ========== -->
+  <div class="page active" id="page-home">
+    <div class="page-head">
+      <p class="crumb">ទំព័រដើម</p>
+      <h2>មជ្ឈមណ្ឌល Assignment JavaScript</h2>
+      <p class="desc">ជ្រើសរើសគំរូមួយពី Left Menu ឬចុចលើកាតខាងក្រោម ដើម្បីមើលគំរូនីមួយៗ</p>
+    </div>
+    <div class="home-grid">
+      <div class="home-card" data-goto="todo">
+        <div class="emoji">📝</div>
+        <h3>បញ្ជីកិច្ចការ (To-Do)</h3>
+        <p>Click Event, createElement, រាប់ស្ថិតិ</p>
+        <span class="tag easy">ងាយបំផុត</span>
+      </div>
+      <div class="home-card" data-goto="quiz">
+        <div class="emoji">🎯</div>
+        <h3>ល្បែងសំណួរ (Quiz)</h3>
+        <p>Array of Objects, if/else, ពិន្ទុ + លទ្ធផល</p>
+        <span class="tag easy">ងាយ</span>
+      </div>
+      <div class="home-card" data-goto="profile">
+        <div class="emoji">👨‍🎓</div>
+        <h3>ប្រវត្តិរូបសិស្ស</h3>
+        <p>Tabs, Like, Skills bar, Guestbook, នាឡិកា</p>
+        <span class="tag easy">ងាយ</span>
+      </div>
+      <div class="home-card" data-goto="coffee">
+        <div class="emoji">☕</div>
+        <h3>ហាងកាហ្វេខ្មែរ</h3>
+        <p>Search, Filter, Cart (reduce), Add to cart</p>
+        <span class="tag mid">មធ្យម</span>
+      </div>
+      <div class="home-card" data-goto="sms">
+        <div class="emoji">🎓</div>
+        <h3>គ្រប់គ្រងសិស្ស (CRUD)</h3>
+        <p>Create, Update, Delete, Sort, Dashboard</p>
+        <span class="tag big">Big Project</span>
+      </div>
     </div>
   </div>
 
-  <div class="grid" id="productGrid"></div>
-  <p id="emptyMsg">😕 រកមិនឃើញភេសជ្ជៈដែលអ្នកស្វែងរកទេ</p>
-</section>
-
-<!-- ================= CART ================= -->
-<section id="cart">
-  <div class="sec-head">
-    <p class="eyebrow">Cart</p>
-    <h2>កន្ត្រកទំនិញ</h2>
-    <p>គណនាតម្លៃសរុបដោយប្រើ <code>reduce()</code></p>
-  </div>
-  <div class="cart-box">
-    <div id="cartItems"></div>
-    <p id="cartEmpty">កន្ត្រកទទេ — សូមជ្រើសរើសភេសជ្ជៈពីបញ្ជីខាងលើ</p>
-    <div class="cart-total">
-      <span>សរុប៖</span>
-      <span class="amount" id="cartTotal">$0.00</span>
+  <!-- ========== PAGE: TO-DO ========== -->
+  <div class="page" id="page-todo">
+    <div class="page-head">
+      <p class="crumb">Assignment ងាយបំផុត</p>
+      <h2>📝 បញ្ជីកិច្ចការ (To-Do List)</h2>
+      <p class="desc">Click Event • createElement • classList.toggle • រាប់ស្ថិតិ</p>
+    </div>
+    <div class="t-app">
+      <div class="t-row">
+        <input type="text" id="tInput" placeholder="សរសេរកិច្ចការថ្មី...">
+        <button id="tAdd">បន្ថែម</button>
+      </div>
+      <span id="tErr"></span>
+      <div class="t-stats">
+        <div><strong id="tTotal">0</strong><span>សរុប</span></div>
+        <div><strong id="tDone">0</strong><span>រួចរាល់</span></div>
+        <div><strong id="tLeft">0</strong><span>នៅសល់</span></div>
+      </div>
+      <ul id="tList"></ul>
+      <p id="tEmpty">មិនទាន់មានកិច្ចការទេ — សូមបន្ថែមកិច្ចការដំបូង! 🎯</p>
     </div>
   </div>
-</section>
 
-<!-- ================= ORDER FORM ================= -->
-<section id="order">
-  <div class="sec-head">
-    <p class="eyebrow">Order</p>
-    <h2>ទម្រង់បញ្ជាទិញ</h2>
-    <p>Form Validation ដោយ JavaScript (មិនប្រើ HTML validation ទេ)</p>
+  <!-- ========== PAGE: QUIZ ========== -->
+  <div class="page" id="page-quiz">
+    <div class="page-head">
+      <p class="crumb">Assignment ងាយ</p>
+      <h2>🎯 ល្បែងសំណួរ (Quiz Game)</h2>
+      <p class="desc">Array of Objects • forEach • if/else • DOM</p>
+    </div>
+    <div class="q-box">
+      <div id="qQuizPage">
+        <div class="q-prog-row">
+          <span id="qNumber">សំណួរ 1 / 5</span>
+          <span id="qScoreTag">ពិន្ទុ៖ 0</span>
+        </div>
+        <div class="q-prog"><span id="qFill"></span></div>
+        <p id="qText">កំពុងផ្ទុកសំណួរ...</p>
+        <div id="qAnswers"></div>
+        <p id="qFeedback"></p>
+        <button class="q-btn" id="qNext" disabled>សំណួរបន្ទាប់ →</button>
+      </div>
+      <div id="qResult">
+        <div id="qResultEmoji">🏆</div>
+        <p id="qResultScore">0 / 5</p>
+        <p id="qResultMsg"></p>
+        <button class="q-btn" id="qRestart">🔄 លេងម្ដងទៀត</button>
+      </div>
+    </div>
   </div>
 
-  <form id="orderForm" novalidate>
-    <div class="field">
-      <label for="custName">ឈ្មោះអតិថិជន <span class="req">*</span></label>
-      <input type="text" id="custName" placeholder="ឧ. សុខ ដារា">
-      <span class="error" id="errName"></span>
+  <!-- ========== PAGE: PROFILE ========== -->
+  <div class="page" id="page-profile">
+    <div class="page-head">
+      <p class="crumb">Assignment ងាយ</p>
+      <h2>👨‍🎓 ប្រវត្តិរូបសិស្ស (Profile)</h2>
+      <p class="desc">Tabs • Like counter • Skill bars • Guestbook • Digital clock</p>
     </div>
-    <div class="field">
-      <label for="custPhone">លេខទូរស័ព្ទ <span class="req">*</span></label>
-      <input type="tel" id="custPhone" placeholder="ឧ. 012345678">
-      <span class="error" id="errPhone"></span>
-    </div>
-    <div class="field">
-      <label for="custBranch">សាខា <span class="req">*</span></label>
-      <select id="custBranch">
-        <option value="">-- ជ្រើសរើសសាខា --</option>
-        <option value="svayrieng">ស្វាយរៀង</option>
-        <option value="phnompenh">ភ្នំពេញ</option>
-        <option value="bavet">បាវិត</option>
-      </select>
-      <span class="error" id="errBranch"></span>
-    </div>
-    <div class="field">
-      <label for="custNote">កំណត់ចំណាំបន្ថែម</label>
-      <textarea id="custNote" rows="3" placeholder="ឧ. ស្ករតិច ទឹកកកច្រើន..."></textarea>
-      <span class="error"></span>
-    </div>
-    <button type="submit" class="btn btn-gold">✅ បញ្ជាទិញឥឡូវនេះ</button>
-    <div id="formSuccess"></div>
-  </form>
-</section>
+    <div class="p-wrap">
+      <div class="p-hero">
+        <div class="p-avatar">👨‍🎓</div>
+        <h3>សុខ ដារា</h3>
+        <p>សិស្សឆ្នាំទី២ • ជំនាញបច្ចេកវិទ្យាព័ត៌មាន</p>
+      </div>
+      <div class="p-tabs">
+        <button class="p-tab-btn active" data-ptab="pAbout">អំពីខ្ញុំ</button>
+        <button class="p-tab-btn" data-ptab="pSkills">ជំនាញ</button>
+        <button class="p-tab-btn" data-ptab="pGuest">មតិយោបល់</button>
+      </div>
 
-<!-- ================= FOOTER ================= -->
-<footer>
-  <p>☕ <span class="gold">កាហ្វេខ្មែរ</span> — គេហទំព័រគំរូ Assignment មុខវិជ្ជា JavaScript</p>
-  <p>© <span id="year"></span> Web Design II</p>
-</footer>
+      <div class="p-page active" id="pAbout">
+        <div class="p-box">
+          <h3>👋 ណែនាំខ្លួន</h3>
+          <p>សួស្តី! ខ្ញុំឈ្មោះ សុខ ដារា។ ខ្ញុំកំពុងសិក្សាផ្នែក Web Design ហើយចូលចិត្តរៀន HTML, CSS និង JavaScript ។</p>
+        </div>
+        <div class="p-box p-center">
+          <h3>🕐 ម៉ោងបច្ចុប្បន្ន</h3>
+          <p id="pClock">--:--:--</p>
+        </div>
+        <div class="p-box p-center">
+          <h3>❤️ គាំទ្រខ្ញុំ</h3>
+          <p>ចំនួនចូលចិត្ត៖ <span id="pLikeCount">0</span></p>
+          <button id="pLikeBtn">👍 ចូលចិត្ត</button>
+        </div>
+      </div>
+
+      <div class="p-page" id="pSkills">
+        <div class="p-box">
+          <h3>💻 ជំនាញរបស់ខ្ញុំ</h3>
+          <div id="pSkillList"></div>
+        </div>
+      </div>
+
+      <div class="p-page" id="pGuest">
+        <div class="p-box">
+          <h3>💬 សរសេរមតិយោបល់</h3>
+          <input type="text" id="pName" placeholder="ឈ្មោះរបស់អ្នក">
+          <textarea id="pMsg" rows="2" placeholder="សាររបស់អ្នក..."></textarea>
+          <span id="pErr"></span>
+          <button id="pAddBtn">➕ បញ្ចូលមតិ</button>
+        </div>
+        <div class="p-box">
+          <h3>📋 មតិយោបល់ទាំងអស់ (<span id="pCount">0</span>)</h3>
+          <div id="pComments"><p style="color:var(--muted)">មិនទាន់មានមតិយោបល់ទេ...</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE: COFFEE ========== -->
+  <div class="page" id="page-coffee">
+    <div class="page-head">
+      <p class="crumb">Assignment មធ្យម</p>
+      <h2>☕ ហាងកាហ្វេខ្មែរ (Coffee Shop)</h2>
+      <p class="desc">Live search • Filter • Event Delegation • Cart ជាមួយ reduce()</p>
+    </div>
+
+    <div class="c-controls">
+      <input type="text" id="cSearch" placeholder="🔍 ស្វែងរកភេសជ្ជៈ...">
+      <div class="c-filters" id="cFilters">
+        <button class="c-fbtn active" data-cat="all">ទាំងអស់</button>
+        <button class="c-fbtn" data-cat="coffee">កាហ្វេ</button>
+        <button class="c-fbtn" data-cat="tea">តែ</button>
+        <button class="c-fbtn" data-cat="smoothie">ទឹកក្រឡុក</button>
+      </div>
+    </div>
+
+    <div class="c-grid" id="cGrid"></div>
+    <p id="cEmpty">😕 រកមិនឃើញភេសជ្ជៈដែលអ្នកស្វែងរកទេ</p>
+
+    <div class="c-cart">
+      <h3>🛒 កន្ត្រកទំនិញ (<span id="cCount">0</span>)</h3>
+      <div id="cItems"></div>
+      <p id="cCartEmpty">កន្ត្រកទទេ — សូមជ្រើសរើសភេសជ្ជៈពីខាងលើ</p>
+      <div class="c-total"><span>សរុប៖</span><span class="amount" id="cTotal">$0.00</span></div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE: STUDENT MANAGEMENT ========== -->
+  <div class="page" id="page-sms">
+    <div class="page-head">
+      <p class="crumb">Big Project</p>
+      <h2>🎓 ប្រព័ន្ធគ្រប់គ្រងសិស្ស (CRUD)</h2>
+      <p class="desc">Create • Read • Update • Delete • Search • Sort • Dashboard</p>
+    </div>
+
+    <div class="s-cards">
+      <div class="s-stat"><strong id="sTotal">0</strong><span>👥 សិស្សសរុប</span></div>
+      <div class="s-stat teal"><strong id="sAvg">0</strong><span>📊 ពិន្ទុមធ្យម</span></div>
+      <div class="s-stat amber"><strong id="sTop">—</strong><span>🏅 ពិន្ទុខ្ពស់បំផុត</span></div>
+      <div class="s-stat red"><strong id="sFail">0</strong><span>⚠️ ធ្លាក់ (F)</span></div>
+    </div>
+
+    <div class="s-panel">
+      <h3>📝 បញ្ចូលព័ត៌មានសិស្ស <span id="sMode"></span></h3>
+      <div class="s-grid">
+        <div class="s-field">
+          <label for="sName">ឈ្មោះសិស្ស</label>
+          <input type="text" id="sName" placeholder="ឧ. ចាន់ សុភា">
+          <span class="err" id="sErrName"></span>
+        </div>
+        <div class="s-field">
+          <label for="sGender">ភេទ</label>
+          <select id="sGender">
+            <option value="">-- ជ្រើសរើស --</option>
+            <option value="ប្រុស">ប្រុស</option>
+            <option value="ស្រី">ស្រី</option>
+          </select>
+          <span class="err" id="sErrGender"></span>
+        </div>
+        <div class="s-field">
+          <label for="sClass">ថ្នាក់</label>
+          <select id="sClass">
+            <option value="">-- ជ្រើសរើស --</option>
+            <option value="WD-A">WD-A</option>
+            <option value="WD-B">WD-B</option>
+            <option value="WD-C">WD-C</option>
+          </select>
+          <span class="err" id="sErrClass"></span>
+        </div>
+        <div class="s-field">
+          <label for="sScore">ពិន្ទុ (0-100)</label>
+          <input type="number" id="sScore" min="0" max="100" placeholder="ឧ. 85">
+          <span class="err" id="sErrScore"></span>
+        </div>
+      </div>
+      <div class="s-actions">
+        <button class="s-btn s-primary" id="sSave">💾 រក្សាទុក</button>
+        <button class="s-btn s-ghost" id="sClear">🧹 សម្អាត</button>
+      </div>
+    </div>
+
+    <div class="s-panel">
+      <h3>📋 បញ្ជីសិស្ស</h3>
+      <div class="s-toolbar">
+        <input type="text" id="sSearch" placeholder="🔍 ស្វែងរកតាមឈ្មោះ...">
+        <select id="sFilter">
+          <option value="all">គ្រប់ថ្នាក់</option>
+          <option value="WD-A">WD-A</option>
+          <option value="WD-B">WD-B</option>
+          <option value="WD-C">WD-C</option>
+        </select>
+        <select id="sSort">
+          <option value="none">មិនតម្រៀប</option>
+          <option value="score-desc">ពិន្ទុ ខ្ពស់ → ទាប</option>
+          <option value="score-asc">ពិន្ទុ ទាប → ខ្ពស់</option>
+          <option value="name">ឈ្មោះ ក → អ</option>
+        </select>
+      </div>
+      <div class="s-twrap">
+        <table>
+          <thead>
+            <tr><th>ល.រ</th><th>ឈ្មោះ</th><th>ភេទ</th><th>ថ្នាក់</th><th>ពិន្ទុ</th><th>និទ្ទេស</th><th>សកម្មភាព</th></tr>
+          </thead>
+          <tbody id="sBody"></tbody>
+        </table>
+        <p id="sEmpty">គ្មានទិន្នន័យសិស្សទេ</p>
+      </div>
+    </div>
+  </div>
+
+</main>
 
 <script>
 /* ============================================================
-   ភាគ JavaScript — សិស្សត្រូវសិក្សា និងអនុវត្តផ្នែកទាំង ៦ ខាងក្រោម
+   ០. LEFT MENU — ប្ដូរទំព័រ (Single Page Application ងាយៗ)
    ============================================================ */
+const menuItems = document.querySelectorAll(".menu-item");
+const pages = document.querySelectorAll(".page");
+const sidebar = document.getElementById("sidebar");
 
-/* ------------------------------------------------------------
-   ១. ទិន្នន័យផលិតផល (Array of Objects)
-   ------------------------------------------------------------ */
-const products = [
+function goToPage(pageName) {
+  // ១. ដកថ្នាក់ active ចេញពីទាំងអស់
+  menuItems.forEach(m => m.classList.remove("active"));
+  pages.forEach(p => p.classList.remove("active"));
+  // ២. ដាក់ active ទៅម៉ឺនុយ និងទំព័រដែលត្រូវគ្នា
+  document.querySelector('.menu-item[data-page="' + pageName + '"]').classList.add("active");
+  document.getElementById("page-" + pageName).classList.add("active");
+  // ៣. បិទ sidebar លើទូរស័ព្ទ + រំកិលទៅលើ
+  sidebar.classList.remove("open");
+  window.scrollTo({ top: 0 });
+}
+
+menuItems.forEach(function (item) {
+  item.addEventListener("click", function () {
+    goToPage(item.dataset.page);
+  });
+});
+
+// កាតលើទំព័រដើម ក៏អាចចុចបានដែរ
+document.querySelectorAll(".home-card").forEach(function (card) {
+  card.addEventListener("click", function () {
+    goToPage(card.dataset.goto);
+  });
+});
+
+// Hamburger សម្រាប់ទូរស័ព្ទ
+document.getElementById("menuToggle").addEventListener("click", function () {
+  sidebar.classList.toggle("open");
+});
+
+// ឆ្នាំបច្ចុប្បន្ន
+document.getElementById("footYear").textContent = new Date().getFullYear();
+
+/* ============================================================
+   ១. TO-DO LIST
+   ============================================================ */
+const tInput = document.getElementById("tInput");
+const tList = document.getElementById("tList");
+
+document.getElementById("tAdd").addEventListener("click", tAddTask);
+tInput.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") tAddTask();
+});
+
+function tAddTask() {
+  const text = tInput.value.trim();
+  if (text === "") {
+    document.getElementById("tErr").textContent = "⚠️ សូមសរសេរកិច្ចការជាមុនសិន!";
+    return;
+  }
+  document.getElementById("tErr").textContent = "";
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <button class="t-btn t-done">⬜</button>
+    <span class="text">${text}</span>
+    <button class="t-btn t-del">🗑️</button>`;
+  tList.appendChild(li);
+  tInput.value = "";
+  tInput.focus();
+  tStats();
+}
+
+// Event Delegation — done / delete
+tList.addEventListener("click", function (e) {
+  if (e.target.classList.contains("t-done")) {
+    const li = e.target.parentElement;
+    li.classList.toggle("done");
+    e.target.textContent = li.classList.contains("done") ? "✅" : "⬜";
+    tStats();
+  }
+  if (e.target.classList.contains("t-del")) {
+    e.target.parentElement.remove();
+    tStats();
+  }
+});
+
+function tStats() {
+  const total = tList.querySelectorAll("li").length;
+  const done = tList.querySelectorAll("li.done").length;
+  document.getElementById("tTotal").textContent = total;
+  document.getElementById("tDone").textContent = done;
+  document.getElementById("tLeft").textContent = total - done;
+  document.getElementById("tEmpty").style.display = total === 0 ? "block" : "none";
+}
+tStats();
+
+/* ============================================================
+   ២. QUIZ GAME
+   ============================================================ */
+const qQuestions = [
+  { q: "HTML តំណាងឱ្យអ្វី?", answers: ["HyperText Markup Language", "High Tech Modern Language", "Home Tool Markup Language"], correct: 0 },
+  { q: "Tag ណាមួយប្រើសម្រាប់បង្កើតតំណភ្ជាប់ (link)?", answers: ["<p>", "<a>", "<img>"], correct: 1 },
+  { q: "ក្នុង CSS តើ property ណាប្ដូរពណ៌អក្សរ?", answers: ["background", "font-style", "color"], correct: 2 },
+  { q: "ក្នុង JavaScript តើពាក្យណាប្រើប្រកាសអថេរ?", answers: ["let", "loop", "link"], correct: 0 },
+  { q: "document.getElementById() ប្រើសម្រាប់អ្វី?", answers: ["បង្កើត file ថ្មី", "ស្វែងរក Element តាម id", "លុបទំព័រ"], correct: 1 }
+];
+let qIndex = 0, qScore = 0, qAnswered = false;
+
+function qShow() {
+  const q = qQuestions[qIndex];
+  qAnswered = false;
+  document.getElementById("qNumber").textContent = "សំណួរ " + (qIndex + 1) + " / " + qQuestions.length;
+  document.getElementById("qScoreTag").textContent = "ពិន្ទុ៖ " + qScore;
+  document.getElementById("qFill").style.width = (qIndex / qQuestions.length) * 100 + "%";
+  document.getElementById("qText").textContent = (qIndex + 1) + ". " + q.q;
+
+  const box = document.getElementById("qAnswers");
+  box.innerHTML = "";
+  q.answers.forEach(function (ans, i) {
+    const btn = document.createElement("button");
+    btn.className = "q-ans";
+    btn.textContent = ans;
+    btn.addEventListener("click", () => qCheck(i, btn));
+    box.appendChild(btn);
+  });
+  const fb = document.getElementById("qFeedback");
+  fb.textContent = ""; fb.className = "";
+  document.getElementById("qNext").disabled = true;
+}
+
+function qCheck(selected, btn) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const correct = qQuestions[qIndex].correct;
+  const all = document.querySelectorAll("#qAnswers .q-ans");
+  all.forEach(b => b.disabled = true);
+  const fb = document.getElementById("qFeedback");
+  if (selected === correct) {
+    btn.classList.add("correct");
+    fb.textContent = "🎉 ត្រូវហើយ! ពូកែណាស់";
+    fb.className = "good";
+    qScore++;
+    document.getElementById("qScoreTag").textContent = "ពិន្ទុ៖ " + qScore;
+  } else {
+    btn.classList.add("wrong");
+    all[correct].classList.add("correct");
+    fb.textContent = "😅 ខុសហើយ! ចម្លើយត្រូវជាពណ៌បៃតង";
+    fb.className = "bad";
+  }
+  document.getElementById("qNext").disabled = false;
+}
+
+document.getElementById("qNext").addEventListener("click", function () {
+  qIndex++;
+  if (qIndex < qQuestions.length) qShow();
+  else {
+    document.getElementById("qQuizPage").style.display = "none";
+    document.getElementById("qResult").style.display = "block";
+    document.getElementById("qResultScore").textContent = qScore + " / " + qQuestions.length;
+    const emoji = document.getElementById("qResultEmoji");
+    const msg = document.getElementById("qResultMsg");
+    if (qScore === qQuestions.length) { emoji.textContent = "🏆"; msg.textContent = "ល្អឥតខ្ចោះ! ឆ្លើយត្រូវទាំងអស់!"; }
+    else if (qScore >= 3) { emoji.textContent = "😊"; msg.textContent = "ល្អណាស់! បន្តខិតខំទៀត!"; }
+    else { emoji.textContent = "💪"; msg.textContent = "កុំបាក់ទឹកចិត្ត! សាកម្ដងទៀត!"; }
+  }
+});
+
+document.getElementById("qRestart").addEventListener("click", function () {
+  qIndex = 0; qScore = 0;
+  document.getElementById("qResult").style.display = "none";
+  document.getElementById("qQuizPage").style.display = "block";
+  qShow();
+});
+qShow();
+
+/* ============================================================
+   ៣. PROFILE
+   ============================================================ */
+// Like counter
+let pLikes = 0;
+document.getElementById("pLikeBtn").addEventListener("click", function () {
+  pLikes++;
+  document.getElementById("pLikeCount").textContent = pLikes;
+});
+
+// Tabs
+document.querySelectorAll(".p-tab-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".p-tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".p-page").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.ptab).classList.add("active");
+  });
+});
+
+// Skills
+const pSkills = [
+  { name: "HTML", level: 90 },
+  { name: "CSS", level: 75 },
+  { name: "JavaScript", level: 60 },
+  { name: "Photoshop", level: 50 }
+];
+document.getElementById("pSkillList").innerHTML = pSkills.map(s => `
+  <div class="p-skill">
+    <div class="top"><strong>${s.name}</strong><span>${s.level}%</span></div>
+    <div class="p-bar"><span style="width:${s.level}%"></span></div>
+  </div>`).join("");
+
+// Guestbook
+let pTotal = 0;
+document.getElementById("pAddBtn").addEventListener("click", function () {
+  const name = document.getElementById("pName").value.trim();
+  const msg = document.getElementById("pMsg").value.trim();
+  if (name === "" || msg === "") {
+    document.getElementById("pErr").textContent = "⚠️ សូមបំពេញឈ្មោះ និងសារឱ្យបានគ្រប់!";
+    return;
+  }
+  document.getElementById("pErr").textContent = "";
+  if (pTotal === 0) document.getElementById("pComments").innerHTML = "";
+  const div = document.createElement("div");
+  div.className = "p-comment";
+  div.innerHTML = "<strong>" + name + "៖</strong> " + msg;
+  document.getElementById("pComments").prepend(div);
+  pTotal++;
+  document.getElementById("pCount").textContent = pTotal;
+  document.getElementById("pName").value = "";
+  document.getElementById("pMsg").value = "";
+});
+
+// Digital clock
+function pClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, "0");
+  const m = String(now.getMinutes()).padStart(2, "0");
+  const s = String(now.getSeconds()).padStart(2, "0");
+  document.getElementById("pClock").textContent = h + ":" + m + ":" + s;
+}
+setInterval(pClock, 1000);
+pClock();
+
+/* ============================================================
+   ៤. COFFEE SHOP
+   ============================================================ */
+const cProducts = [
   { id: 1, name: "កាហ្វេខ្មែរទឹកដោះគោ", cat: "coffee",   price: 1.50, emoji: "☕", desc: "កាហ្វេបុរាណខ្មែរ ជាមួយទឹកដោះគោខាប់" },
   { id: 2, name: "កាហ្វេទឹកកក",          cat: "coffee",   price: 1.25, emoji: "🧊", desc: "កាហ្វេខ្មៅត្រជាក់ ស្រស់ស្រាយ" },
   { id: 3, name: "Cappuccino",           cat: "coffee",   price: 2.00, emoji: "🥛", desc: "កាហ្វេអ៊ីតាលី ជាមួយពពុះទឹកដោះគោ" },
@@ -323,217 +806,229 @@ const products = [
   { id: 7, name: "ទឹកក្រឡុកផ្លែប៊ឺរ",      cat: "smoothie", price: 2.50, emoji: "🥑", desc: "ផ្លែប៊ឺរខ្ចី ទឹកដោះគោ និងទឹកកក" },
   { id: 8, name: "ទឹកក្រឡុកចេក",          cat: "smoothie", price: 2.00, emoji: "🍌", desc: "ចេកអំបូងទុំ ក្រឡុកជាមួយទឹកដោះគោ" }
 ];
+let cCart = [];
+let cCat = "all";
+let cKeyword = "";
 
-// កន្ត្រកទំនិញ (state) — រក្សាទុកក្នុង memory
-let cart = [];
-
-// ស្ថានភាពត្រង (filter state)
-let currentCategory = "all";
-let currentSearch = "";
-
-/* ------------------------------------------------------------
-   ២. DOM Manipulation — បង្ហាញផលិតផលទៅលើទំព័រ
-   ------------------------------------------------------------ */
-const productGrid = document.getElementById("productGrid");
-const emptyMsg = document.getElementById("emptyMsg");
-
-function renderProducts() {
-  // ត្រងតាមប្រភេទ + ពាក្យស្វែងរក (Array.filter)
-  const filtered = products.filter(function (p) {
-    const matchCat = currentCategory === "all" || p.cat === currentCategory;
-    const matchSearch = p.name.toLowerCase().includes(currentSearch.toLowerCase());
-    return matchCat && matchSearch;
-  });
-
-  // បង្កើត HTML ដោយ Array.map + Template Literals
-  productGrid.innerHTML = filtered.map(function (p) {
-    return `
-      <article class="card">
-        <div class="emoji">${p.emoji}</div>
-        <p class="cat">${catName(p.cat)}</p>
-        <h3>${p.name}</h3>
-        <p class="desc">${p.desc}</p>
-        <div class="row">
-          <span class="price">$${p.price.toFixed(2)}</span>
-          <button class="add-btn" data-id="${p.id}">+ បន្ថែម</button>
-        </div>
-      </article>`;
-  }).join("");
-
-  // បង្ហាញសារ ប្រសិនបើគ្មានលទ្ធផល
-  emptyMsg.style.display = filtered.length === 0 ? "block" : "none";
-}
-
-// បំលែងឈ្មោះប្រភេទជាភាសាខ្មែរ
-function catName(cat) {
+function cCatName(cat) {
   const names = { coffee: "កាហ្វេ", tea: "តែ", smoothie: "ទឹកក្រឡុក" };
   return names[cat] || cat;
 }
 
-/* ------------------------------------------------------------
-   ៣. Events — ស្វែងរក, ត្រង, បន្ថែមទៅកន្ត្រក (Event Delegation)
-   ------------------------------------------------------------ */
-// ព្រឹត្តិការណ៍ input សម្រាប់ស្វែងរកភ្លាមៗ (live search)
-document.getElementById("searchInput").addEventListener("input", function (e) {
-  currentSearch = e.target.value.trim();
-  renderProducts();
-});
-
-// ប៊ូតុងត្រងតាមប្រភេទ
-document.getElementById("filterBox").addEventListener("click", function (e) {
-  if (!e.target.classList.contains("filter-btn")) return;
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-  e.target.classList.add("active");
-  currentCategory = e.target.dataset.cat;
-  renderProducts();
-});
-
-// Event Delegation — ស្ដាប់ click លើ grid តែមួយ ជំនួសការភ្ជាប់រាល់ប៊ូតុង
-productGrid.addEventListener("click", function (e) {
-  if (!e.target.classList.contains("add-btn")) return;
-  addToCart(Number(e.target.dataset.id));
-});
-
-/* ------------------------------------------------------------
-   ៤. Cart Logic — Array Methods (find, filter, reduce)
-   ------------------------------------------------------------ */
-const cartItemsBox = document.getElementById("cartItems");
-const cartEmptyMsg = document.getElementById("cartEmpty");
-const cartTotalEl = document.getElementById("cartTotal");
-const cartCountEl = document.getElementById("cartCount");
-
-function addToCart(id) {
-  const found = cart.find(item => item.id === id);
-  if (found) {
-    found.qty++; // មានរួចហើយ → បន្ថែមចំនួន
-  } else {
-    const product = products.find(p => p.id === id);
-    cart.push({ ...product, qty: 1 }); // Spread operator ចម្លង object
-  }
-  renderCart();
+function cRender() {
+  const filtered = cProducts.filter(function (p) {
+    const matchCat = cCat === "all" || p.cat === cCat;
+    const matchSearch = p.name.toLowerCase().includes(cKeyword.toLowerCase());
+    return matchCat && matchSearch;
+  });
+  document.getElementById("cGrid").innerHTML = filtered.map(p => `
+    <article class="c-card">
+      <div class="emoji">${p.emoji}</div>
+      <p class="cat">${cCatName(p.cat)}</p>
+      <h3>${p.name}</h3>
+      <p class="desc">${p.desc}</p>
+      <div class="row">
+        <span class="price">$${p.price.toFixed(2)}</span>
+        <button class="c-add" data-id="${p.id}">+ បន្ថែម</button>
+      </div>
+    </article>`).join("");
+  document.getElementById("cEmpty").style.display = filtered.length === 0 ? "block" : "none";
 }
 
-function changeQty(id, delta) {
-  const item = cart.find(i => i.id === id);
+document.getElementById("cSearch").addEventListener("input", function (e) {
+  cKeyword = e.target.value.trim();
+  cRender();
+});
+
+document.getElementById("cFilters").addEventListener("click", function (e) {
+  if (!e.target.classList.contains("c-fbtn")) return;
+  document.querySelectorAll(".c-fbtn").forEach(b => b.classList.remove("active"));
+  e.target.classList.add("active");
+  cCat = e.target.dataset.cat;
+  cRender();
+});
+
+document.getElementById("cGrid").addEventListener("click", function (e) {
+  if (!e.target.classList.contains("c-add")) return;
+  const id = Number(e.target.dataset.id);
+  const found = cCart.find(i => i.id === id);
+  if (found) found.qty++;
+  else cCart.push({ ...cProducts.find(p => p.id === id), qty: 1 });
+  cRenderCart();
+});
+
+function cQty(id, delta) {
+  const item = cCart.find(i => i.id === id);
   if (!item) return;
   item.qty += delta;
-  if (item.qty <= 0) removeItem(id);
-  else renderCart();
+  if (item.qty <= 0) cCart = cCart.filter(i => i.id !== id);
+  cRenderCart();
+}
+function cRemove(id) {
+  cCart = cCart.filter(i => i.id !== id);
+  cRenderCart();
 }
 
-function removeItem(id) {
-  cart = cart.filter(i => i.id !== id); // លុបដោយ filter
-  renderCart();
-}
-
-function renderCart() {
-  cartItemsBox.innerHTML = cart.map(item => `
-    <div class="cart-item">
+function cRenderCart() {
+  document.getElementById("cItems").innerHTML = cCart.map(item => `
+    <div class="c-item">
       <span>${item.emoji}</span>
       <span class="name">${item.name}</span>
-      <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+      <button class="c-qty" onclick="cQty(${item.id},-1)">−</button>
       <strong>${item.qty}</strong>
-      <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+      <button class="c-qty" onclick="cQty(${item.id},1)">+</button>
       <span>$${(item.price * item.qty).toFixed(2)}</span>
-      <button class="remove-btn" onclick="removeItem(${item.id})" aria-label="លុប">🗑️</button>
+      <button class="c-del" onclick="cRemove(${item.id})">🗑️</button>
     </div>`).join("");
+  const total = cCart.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const count = cCart.reduce((sum, i) => sum + i.qty, 0);
+  document.getElementById("cTotal").textContent = "$" + total.toFixed(2);
+  document.getElementById("cCount").textContent = count;
+  document.getElementById("cCartEmpty").style.display = cCart.length === 0 ? "block" : "none";
+}
+cRender();
+cRenderCart();
 
-  // reduce() — គណនាតម្លៃសរុប និងចំនួនសរុប
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+/* ============================================================
+   ៥. STUDENT MANAGEMENT (CRUD)
+   ============================================================ */
+let sStudents = [
+  { id: 1, name: "ចាន់ សុភា",  gender: "ស្រី",  cls: "WD-A", score: 88 },
+  { id: 2, name: "សុខ វិចិត្រ", gender: "ប្រុស", cls: "WD-B", score: 72 },
+  { id: 3, name: "ហេង ដាលីស", gender: "ស្រី",  cls: "WD-A", score: 95 },
+  { id: 4, name: "ពៅ រតនា",   gender: "ប្រុស", cls: "WD-C", score: 45 },
+  { id: 5, name: "លី ម៉េងហុង", gender: "ប្រុស", cls: "WD-B", score: 60 }
+];
+let sNextId = 6;
+let sEditingId = null;
 
-  cartTotalEl.textContent = "$" + total.toFixed(2);
-  cartCountEl.textContent = count;
-  cartEmptyMsg.style.display = cart.length === 0 ? "block" : "none";
+function sGrade(score) {
+  if (score >= 90) return "A";
+  else if (score >= 80) return "B";
+  else if (score >= 70) return "C";
+  else if (score >= 50) return "D";
+  else return "F";
 }
 
-/* ------------------------------------------------------------
-   ៥. Form Validation — ពិនិត្យទិន្នន័យមុនបញ្ជូន
-   ------------------------------------------------------------ */
-document.getElementById("orderForm").addEventListener("submit", function (e) {
-  e.preventDefault(); // បញ្ឈប់ការ reload ទំព័រ
+function sRender() {
+  const keyword = document.getElementById("sSearch").value.trim().toLowerCase();
+  const cls = document.getElementById("sFilter").value;
+  const sort = document.getElementById("sSort").value;
 
-  const name = document.getElementById("custName");
-  const phone = document.getElementById("custPhone");
-  const branch = document.getElementById("custBranch");
-  let valid = true;
+  let list = sStudents.filter(function (st) {
+    const matchName = st.name.toLowerCase().includes(keyword);
+    const matchClass = cls === "all" || st.cls === cls;
+    return matchName && matchClass;
+  });
 
-  // ពិនិត្យឈ្មោះ — យ៉ាងតិច ២ តួអក្សរ
-  if (name.value.trim().length < 2) {
-    showError(name, "errName", "សូមបញ្ចូលឈ្មោះ យ៉ាងតិច ២ តួអក្សរ");
-    valid = false;
-  } else clearError(name, "errName");
+  list = [...list];
+  if (sort === "score-desc") list.sort((a, b) => b.score - a.score);
+  if (sort === "score-asc")  list.sort((a, b) => a.score - b.score);
+  if (sort === "name")       list.sort((a, b) => a.name.localeCompare(b.name, "km"));
 
-  // ពិនិត្យលេខទូរស័ព្ទ — Regular Expression (លេខកម្ពុជា ៩-១០ ខ្ទង់)
-  const phonePattern = /^0[1-9][0-9]{7,8}$/;
-  if (!phonePattern.test(phone.value.trim())) {
-    showError(phone, "errPhone", "លេខទូរស័ព្ទមិនត្រឹមត្រូវ (ឧ. 012345678)");
-    valid = false;
-  } else clearError(phone, "errPhone");
+  document.getElementById("sBody").innerHTML = list.map((st, i) => {
+    const g = sGrade(st.score);
+    return `
+      <tr>
+        <td>${i + 1}</td>
+        <td><strong>${st.name}</strong></td>
+        <td>${st.gender}</td>
+        <td>${st.cls}</td>
+        <td>${st.score}</td>
+        <td><span class="s-grade ${g}">${g}</span></td>
+        <td>
+          <button class="s-icon" onclick="sEdit(${st.id})">✏️</button>
+          <button class="s-icon" onclick="sDelete(${st.id})">🗑️</button>
+        </td>
+      </tr>`;
+  }).join("");
 
-  // ពិនិត្យសាខា
-  if (branch.value === "") {
-    showError(branch, "errBranch", "សូមជ្រើសរើសសាខា");
-    valid = false;
-  } else clearError(branch, "errBranch");
+  document.getElementById("sEmpty").style.display = list.length === 0 ? "block" : "none";
+  sStats();
+}
 
-  // ពិនិត្យកន្ត្រក — ត្រូវមានទំនិញយ៉ាងតិច ១
-  if (valid && cart.length === 0) {
-    alert("⚠️ កន្ត្រករបស់អ្នកនៅទទេ! សូមជ្រើសរើសភេសជ្ជៈជាមុនសិន។");
+function sStats() {
+  const total = sStudents.length;
+  document.getElementById("sTotal").textContent = total;
+  if (total === 0) {
+    document.getElementById("sAvg").textContent = "0";
+    document.getElementById("sTop").textContent = "—";
+    document.getElementById("sFail").textContent = "0";
     return;
   }
+  const sum = sStudents.reduce((acc, st) => acc + st.score, 0);
+  document.getElementById("sAvg").textContent = (sum / total).toFixed(1);
+  document.getElementById("sTop").textContent = Math.max(...sStudents.map(st => st.score));
+  document.getElementById("sFail").textContent = sStudents.filter(st => sGrade(st.score) === "F").length;
+}
 
-  if (valid) {
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const box = document.getElementById("formSuccess");
-    box.style.display = "block";
-    box.innerHTML = `🎉 <strong>ការបញ្ជាទិញជោគជ័យ!</strong><br>
-      សូមអរគុណ <strong>${name.value.trim()}</strong> —
-      ទំនិញ ${cart.reduce((s,i)=>s+i.qty,0)} មុខ តម្លៃសរុប
-      <strong>$${total.toFixed(2)}</strong> នឹងរួចរាល់ក្នុងពេល ១៥ នាទី។`;
-    this.reset();
-    cart = [];
-    renderCart();
+document.getElementById("sSave").addEventListener("click", function () {
+  const name = document.getElementById("sName");
+  const gender = document.getElementById("sGender");
+  const cls = document.getElementById("sClass");
+  const score = document.getElementById("sScore");
+  let valid = true;
+
+  if (name.value.trim().length < 2) { document.getElementById("sErrName").textContent = "ឈ្មោះ ≥ ២ តួអក្សរ"; valid = false; }
+  else document.getElementById("sErrName").textContent = "";
+
+  if (gender.value === "") { document.getElementById("sErrGender").textContent = "សូមជ្រើសរើសភេទ"; valid = false; }
+  else document.getElementById("sErrGender").textContent = "";
+
+  if (cls.value === "") { document.getElementById("sErrClass").textContent = "សូមជ្រើសរើសថ្នាក់"; valid = false; }
+  else document.getElementById("sErrClass").textContent = "";
+
+  const scoreNum = Number(score.value);
+  if (score.value === "" || isNaN(scoreNum) || scoreNum < 0 || scoreNum > 100) {
+    document.getElementById("sErrScore").textContent = "ពិន្ទុ 0 ដល់ 100"; valid = false;
+  } else document.getElementById("sErrScore").textContent = "";
+
+  if (!valid) return;
+
+  if (sEditingId === null) {
+    sStudents.push({ id: sNextId, name: name.value.trim(), gender: gender.value, cls: cls.value, score: scoreNum });
+    sNextId++;
+  } else {
+    const st = sStudents.find(x => x.id === sEditingId);
+    st.name = name.value.trim();
+    st.gender = gender.value;
+    st.cls = cls.value;
+    st.score = scoreNum;
   }
+  sClearForm();
+  sRender();
 });
 
-function showError(input, errId, msg) {
-  input.classList.add("invalid");
-  document.getElementById(errId).textContent = msg;
+function sEdit(id) {
+  const st = sStudents.find(x => x.id === id);
+  document.getElementById("sName").value = st.name;
+  document.getElementById("sGender").value = st.gender;
+  document.getElementById("sClass").value = st.cls;
+  document.getElementById("sScore").value = st.score;
+  sEditingId = id;
+  document.getElementById("sMode").textContent = "(កំពុងកែប្រែ៖ " + st.name + ")";
 }
-function clearError(input, errId) {
-  input.classList.remove("invalid");
-  document.getElementById(errId).textContent = "";
+
+function sDelete(id) {
+  const st = sStudents.find(x => x.id === id);
+  if (confirm("តើអ្នកពិតជាចង់លុបសិស្ស «" + st.name + "» មែនទេ?")) {
+    sStudents = sStudents.filter(x => x.id !== id);
+    sRender();
+  }
 }
 
-/* ------------------------------------------------------------
-   ៦. Dark / Light Mode + Active Nav + ឆ្នាំបច្ចុប្បន្ន
-   ------------------------------------------------------------ */
-document.getElementById("themeBtn").addEventListener("click", function () {
-  document.body.classList.toggle("dark");
-  this.textContent = document.body.classList.contains("dark") ? "☀️ Light" : "🌙 Dark";
-});
+function sClearForm() {
+  ["sName","sGender","sClass","sScore"].forEach(id => document.getElementById(id).value = "");
+  ["sErrName","sErrGender","sErrClass","sErrScore"].forEach(id => document.getElementById(id).textContent = "");
+  sEditingId = null;
+  document.getElementById("sMode").textContent = "";
+}
+document.getElementById("sClear").addEventListener("click", sClearForm);
 
-// Active link ពេល scroll (IntersectionObserver)
-const sections = document.querySelectorAll("section[id]");
-const navAnchors = document.querySelectorAll(".nav-links a");
-const observer = new IntersectionObserver(function (entries) {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      navAnchors.forEach(a => a.classList.remove("active"));
-      const link = document.querySelector('.nav-links a[href="#' + entry.target.id + '"]');
-      if (link) link.classList.add("active");
-    }
-  });
-}, { threshold: 0.4 });
-sections.forEach(sec => observer.observe(sec));
-
-// បង្ហាញឆ្នាំបច្ចុប្បន្ន (Date object)
-document.getElementById("year").textContent = new Date().getFullYear();
-
-// ចាប់ផ្ដើមបង្ហាញទិន្នន័យលើកដំបូង
-renderProducts();
-renderCart();
+document.getElementById("sSearch").addEventListener("input", sRender);
+document.getElementById("sFilter").addEventListener("change", sRender);
+document.getElementById("sSort").addEventListener("change", sRender);
+sRender();
 </script>
 </body>
 </html>
